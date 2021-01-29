@@ -1,29 +1,15 @@
-.DS_Store
-.env
-.flaskenv
-*.pyc
-*.pyo
-env/
-env*
-dist/
-build/
-*.egg
-*.egg-info/
-_mailinglist
-.tox/
-.cache/
-.pytest_cache/
-.idea/
-docs/_build/
+.vscode
 __pycache__
-.env_file
+test.db
 
-# Coverage reports
-htmlcov/
-.coverage
-.coverage.*
-*,cover
-
-# Direnv
-.envrc
-.direnv
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+frontend/node_modules/
+.python-version
