@@ -59,6 +59,18 @@ def require_jwt(function):
     return decorated_function
 
 
+def _get_jwt(user_data):
+    """
+    Create JWT with user data using symmetric encryption
+    """
+    exp_time = datetime.datetime.utcnow() + datetime.timedelta(weeks=2)
+    payload = {'exp': exp_time,
+               'nbf': datetime.datetime.utcnow(),
+               'email': user_data['email']}
+
+    return jwt.encode(payload, JWT_SECRET, algorithm='HS256')
+
+
 @APP.route('/', methods=['POST', 'GET'])
 def health():
     return jsonify("Healthy")
@@ -83,7 +95,8 @@ def auth():
     body = {'email': email, 'password': password}
     user_data = body
 
-    return jsonify(token=_get_jwt(user_data).decode('utf-8'))
+    return jsonify(token=_get_jwt(user_data))
+    # return jsonify(token=_get_jwt(user_data).decode('utf-8'))
 
 
 @APP.route('/contents', methods=['GET'])
@@ -97,27 +110,19 @@ def decode_jwt():
     data = request.headers['Authorization']
     token = str.replace(str(data), 'Bearer ', '')
     try:
+        # Decode the token that user sent.
         data = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
     except:  # pylint: disable=bare-except
         abort(401)
 
-    response = {'email': data['email'],
-                'exp': data['exp'],
-                'nbf': data['nbf']}
+    # print('type(data):', type(data)) # dict
 
-    return jsonify(**response)
+    return jsonify(**data)
+    # response = {'email': data['email'],
+    #             'exp': data['exp'],
+    #             'nbf': data['nbf']}
 
-
-def _get_jwt(user_data):
-    """
-    Create JWT with user data
-    """
-    exp_time = datetime.datetime.utcnow() + datetime.timedelta(weeks=2)
-    payload = {'exp': exp_time,
-               'nbf': datetime.datetime.utcnow(),
-               'email': user_data['email']}
-
-    return jwt.encode(payload, JWT_SECRET, algorithm='HS256')
+    # return jsonify(**response)
 
 
 if __name__ == '__main__':
