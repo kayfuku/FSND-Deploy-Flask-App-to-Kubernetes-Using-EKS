@@ -40,8 +40,4 @@ def test_auth(client):
     assert response.status_code == 200
     token = response.json['token']
     assert token is not None
-
-
-# # Make the tests conveniently executable
-# if __name__ == "__main__":
-#     main()
+    assert False
